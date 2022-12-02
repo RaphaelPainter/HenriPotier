@@ -1,0 +1,16 @@
+ext.versions = [
+        compile_sdk_version     : 31,
+        gradle_version          : "7.3.1",
+        target_sdk_version      : 30,
+        min_sdk_version         : 21,
+        junit_version           : "4.13.2",
+        appcompat_version       : "1.2.0",
+        material_version        : "1.2.1",
+        okhttp_version          : "4.9.0",
+        kotlin_version          : "1.7.20",
+        rxjava_version          : "2.2.20",
+        rxandroid_version       : "2.1.1",
+        coroutines_version      : "1.4.1",
+        constraintlayout_version: "2.0.4",
+        timber_version          : "4.7.1"
+]
