@@ -4,46 +4,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import fr.android.paintersimon.R
 import fr.android.paintersimon.domain.Book
-import fr.android.paintersimon.domain.HenriPotierService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-
-class LibraryViewModel : ViewModel() { //TODO: move to presentation layer
-    val state = MutableLiveData<LibraryState>()
-    fun loadBooks() {
-
-        //build retrofit
-        // TODO: move to data layer
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://henri-potier.techx.fr")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        //create service
-        // TODO: move to data layer
-        val service: HenriPotierService = retrofit.create(HenriPotierService::class.java)
-
-        //state at application start
-        state.postValue(LibraryState(emptyList(), true))
-
-        //aync request to update state
-        viewModelScope.launch(context = Dispatchers.Main) {
-            val books = withContext(Dispatchers.IO) {
-                service.listBooks()
-            }
-            state.postValue(LibraryState(books, false))
-        }
-    }
-}
 
 //
 data class LibraryState(
@@ -59,16 +25,28 @@ class LibraryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
 
+        println("timber start ")
+
+        // getting the recyclerview by its id
+        val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
+
+        // this creates a vertical layout Manager
+        recyclerview.layoutManager = LinearLayoutManager(this)
+
+
+        // This will pass the ArrayList to our Adapter
+        val adapter = LibraryAdapter(ArrayList<Book>())
+
+        // Setting the Adapter with the recyclerview
+        recyclerview.adapter = adapter as RecyclerView.Adapter<*>
+
+        //observe
         viewModel.state.observe(this) { state ->
-            Toast.makeText(
-                this@LibraryActivity,
-                "${state.books.size} books | isLoading ${state.isLoading}",
-                Toast.LENGTH_SHORT
-            )
-                .show()
+            adapter.setList(state.books)
+            adapter.notifyDataSetChanged()
         }
 
-        viewModel.loadBooks()
-    }
+        viewModel.loadBooks();
 
+    }
 }

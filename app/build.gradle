@@ -31,7 +31,15 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     testImplementation "junit:junit:$versions.junit_version"
+    // for adding recyclerview
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+
+    // for adding cardview
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.squareup.picasso:picasso:2.8'
+
     implementation(
             "androidx.appcompat:appcompat:$versions.appcompat_version",
             "com.google.android.material:material:$versions.material_version",
